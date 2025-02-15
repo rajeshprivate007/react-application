@@ -9,4 +9,18 @@ pipeline {
             }
         }
     }
+    stages {
+        stage('NPM Install') {
+            steps {
+                sh "npm install"
+            }
+        }
+    }
+    stages {
+        stage('Build') {
+            steps {
+                sh "npm start"
+            }
+        }
+    }
 }
