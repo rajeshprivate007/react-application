@@ -20,10 +20,12 @@ pipeline {
         }
         stage('SonarQube Analysis') {
             steps {
-                echo "SonarQube code analysis"
-                nodejs(nodeJSInstallationName: 'nodejs'){
-                    echo "SonarQube code analysis"
+                script {
+                    def nodeHome = tool name: 'nodejs', type: 'jenkins.plugins.nodejs.tools.NodeJSInstallation'
+                    env.PATH = "${nodeHome}/bin:${env.PATH}"
                 }
+                sh 'node -v'  // Verify Node.js version in the pipeline
+                sh 'npm -v'   // Verify NPM version
             }
         }
         stage('Build Image') {
