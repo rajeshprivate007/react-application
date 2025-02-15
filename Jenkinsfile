@@ -21,6 +21,9 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo "SonarQube code analysis"
+                nodejs(nodeJSInstallationName: 'nodejs'){
+                    echo "SonarQube code analysis"
+                }
             }
         }
         stage('Build Image') {
