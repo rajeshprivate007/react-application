@@ -1,9 +1,6 @@
 pipeline {
     agent any
     tools {nodejs "nodejs"}
-    environment {
-        SONARQUBE_SCANNER = tool 'sonarqube' // Use the name you configured
-    }
 
     stages {
         stage('Git Checkout') {
