@@ -1,6 +1,9 @@
 pipeline {
     agent any
     tools {nodejs "nodejs"}
+    environment {
+        SONARQUBE_SCANNER = tool 'sonarqube' // Use the name you configured
+    }
 
     stages {
         stage('Git Checkout') {
@@ -17,6 +20,12 @@ pipeline {
             steps {
                 sh "npm run build"
             }
+        }
+        stage('SonarQube Analysis') {
+            //def scannerHome = tool 'SonarScanner';
+            //withSonarQubeEnv() {
+            //sh "${scannerHome}/bin/sonar-scanner"
+        }   
         }
     }
 }
