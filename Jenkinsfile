@@ -35,7 +35,7 @@ pipeline {
         stage('Build Image') {
             steps {
                 echo "Build image"
-                sh "docker build -t my-node-image ."
+                sh "sudo docker build -t my-node-image ."
             }
         }   
     }
