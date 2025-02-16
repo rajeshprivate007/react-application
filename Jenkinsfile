@@ -26,6 +26,7 @@ pipeline {
                 }
                 sh 'node -v'  // Verify Node.js version in the pipeline
                 sh 'npm -v'   // Verify NPM version
+                sh 'npm install --save-dev mocha chai'
                 sh 'npm install sonar-scanner'
                 sh 'npm run sonar'
             }
