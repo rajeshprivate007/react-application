@@ -1,7 +1,7 @@
 pipeline {
     agent any
     tools {nodejs "nodejs"}
-    
+
     environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-credential')
     }
@@ -39,8 +39,19 @@ pipeline {
         stage('Build Image') {
             steps {
                 echo "Build image"
-                sh "docker build -t my-node-image ."
+                sh "docker build -t rajesh7620/node-app:latest ."
             }
-        }   
+        }  
+        stage('Dockerhub Login') {
+            steps {
+                sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+            }
+        }
+        stage('Image Push') {
+            steps {
+                sh 'docker push rajesh7620/node-app:latest'
+            }
+        }
+
     }
 }
