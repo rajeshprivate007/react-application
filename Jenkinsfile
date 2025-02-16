@@ -1,6 +1,10 @@
 pipeline {
     agent any
     tools {nodejs "nodejs"}
+    
+    environment {
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub-credential')
+    }
 
     stages {
         stage('Git Checkout') {
