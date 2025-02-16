@@ -52,6 +52,10 @@ pipeline {
                 sh 'docker push rajesh7620/node-app:latest'
             }
         }
-
     }
+    post {
+    always {
+        sh 'docker logout'
+        }
+     }
 }
