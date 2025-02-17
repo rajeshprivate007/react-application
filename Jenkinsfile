@@ -59,7 +59,7 @@ pipeline {
         stage('Build Docker image') {
             steps {
                 script {
-                    dockerImage = docker.build registryName
+                    def dockerImage = docker build -t registryName
                 }
             }
         }
