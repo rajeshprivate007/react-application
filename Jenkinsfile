@@ -4,10 +4,6 @@ pipeline {
 
     environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-credential')
-    registryName = "DemoACR789"
-    registryUrl = "demoacr789.azurecr.io"
-    registryCredential = "ACR-credentials"
-    dockerImage = ''
     }
 
     stages {
@@ -63,9 +59,9 @@ pipeline {
         }
         stage('Azure Login and push Image to ACR') {
             steps {
-                withCredentials([usernamePassword(credentialsId: 'ACR-credentials', passwordVariable: 'password', usernameVariable: 'username')]){
-                    sh 'docker login -u $(username) -p $(password) demoacr789.azurecr.io'
-                    sh 'docker image push docker image build -t demoacr789.azurecr.io/node-app:${BUILD_NUMBER}'
+                    withCredentials([usernamePassword(credentialsId: 'ACR-credentials', passwordVariable: 'PASSWORD', usernameVariable: 'USERNAME')]) {
+                    sh 'echo $PASSWORD | docker login demoacr789.azurecr.io -u $USERNAME --password-stdin'
+                    sh 'docker push demoacr789.azurecr.io/node-app:${BUILD_NUMBER}'
                 }
             }
         }
