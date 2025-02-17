@@ -65,6 +65,7 @@ pipeline {
             steps {
                 withCredentials([usernamePassword(credentialsId: 'ACR-credentials', passwordVariable: 'password', usernameVariable: 'username')]){
                     sh 'docker login -u $(username) -p $(password) demoacr789.azurecr.io'
+                    sh 'docker image push docker image build -t demoacr789.azurecr.io/node-app:${BUILD_NUMBER}'
                 }
             }
         }
