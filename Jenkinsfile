@@ -56,11 +56,9 @@ pipeline {
                 sh 'docker push rajesh7620/node-app:latest'
             }
         }
-        stage('Build Docker image') {
+        stage('Build image for ACR') {
             steps {
-                script {
-                    def dockerImage = docker build -t registryName
-                }
+                sh 'docker image build -t demoacr789.azurecr.io/node-app:${BUILD_NUMBER} .'
             }
         }
     }
