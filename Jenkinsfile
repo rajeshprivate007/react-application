@@ -61,6 +61,13 @@ pipeline {
                 sh 'docker image build -t demoacr789.azurecr.io/node-app:${BUILD_NUMBER} .'
             }
         }
+        stage('Azure Login and push Image to ACR') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'ACR-credentials', passwordVariable: 'password', usernameVariable: 'username')]){
+                    sh 'docker login -u $(username) -p $(password) demoacr789.azurecr.io'
+                }
+            }
+        }
     }
     post {
     always {
