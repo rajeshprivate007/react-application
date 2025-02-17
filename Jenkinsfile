@@ -4,6 +4,10 @@ pipeline {
 
     environment {
     DOCKERHUB_CREDENTIALS = credentials('dockerhub-credential')
+    registryName = "DemoACR789"
+    registryUrl = "demoacr789.azurecr.io"
+    registryCredential = "ACR-credentials"
+    dockerImage = ''
     }
 
     stages {
@@ -50,6 +54,13 @@ pipeline {
         stage('Image Push') {
             steps {
                 sh 'docker push rajesh7620/node-app:latest'
+            }
+        }
+        stage('Build Docker image') {
+            steps {
+                script {
+                    sh 'dockerImage = docker.build registryName'
+                }
             }
         }
     }
