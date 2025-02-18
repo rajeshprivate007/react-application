@@ -65,6 +65,13 @@ pipeline {
                 }
             }
         }
+        stage('Docker Run') {
+            steps{
+                script {
+                        sh 'docker run -d -p 8096:5000 --rm --name myContainer ${demoacr789.azurecr.io}/${DemoACR789}'
+                    }
+            }
+        }
     }
     post {
     always {
