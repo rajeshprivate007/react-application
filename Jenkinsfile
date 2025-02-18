@@ -66,12 +66,16 @@ pipeline {
             }
         }
         stage('Docker Run') {
-            steps{
+            steps {
                 script {
-                        sh 'docker run -d -p 8096:5000 --rm --name myContainer ${demoacr789.azurecr.io}/${DemoACR789}'
-                    }
+                    sh """
+                    docker pull demoacr789.azurecr.io/node-app:${BUILD_NUMBER}
+                    docker run -d -p 8096:3000 --rm --name myContainer demoacr789.azurecr.io/node-app:${BUILD_NUMBER}
+                    """
+                }
             }
         }
+
     }
     post {
     always {
