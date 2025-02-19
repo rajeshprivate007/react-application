@@ -75,6 +75,17 @@ pipeline {
                 }
             }
         }
+        stage('Deploy to AKS') {
+            steps {
+                script {
+                    sh """
+                    az aks get-credentials --resource-group aks-resource-group --name my-aks-cluster
+                    kubectl apply -f deployment.yaml
+                    kubectl apply -f service.yaml
+                    """
+                }
+            }
+        }
     }
     post {
     always {
