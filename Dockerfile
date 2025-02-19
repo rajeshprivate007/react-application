@@ -2,5 +2,5 @@ FROM node:latest
 WORKDIR /apps
 ADD . .
 RUN npm install
-EXPOSE 8000
-CMD [ "node","./apps/src/index.js" ]
+EXPOSE 3000
+CMD ["node", "src/index.js"]
