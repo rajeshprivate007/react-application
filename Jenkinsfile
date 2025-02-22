@@ -79,9 +79,10 @@ pipeline {
             steps {
                 script {
                     sh """
-                    az aks get-credentials --resource-group aks-resource-group --name my-aks-cluster
-                    kubectl apply -f deployment.yaml
-                    kubectl apply -f service.yaml
+                     az login --identity
+                     az aks get-credentials --resource-group "aks-resource-group" --name "my-aks-cluster" --overwrite-existing
+                     kubectl apply -f deployment.yaml
+                     kubectl apply -f service.yaml
                     """
                 }
             }
