@@ -16,6 +16,6 @@ spec:
     spec:
       containers:
       - name: react-app
-        image: demoacr789.azurecr.io/node-app:latest
+        image: demoacr789.azurecr.io/node-app:${BUILD_NUMBER}
         ports:
         - containerPort: 3000
