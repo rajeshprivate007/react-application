@@ -10,6 +10,7 @@ pipeline {
         stage('Git Checkout') {
             steps {
                 git branch: 'main', credentialsId: 'githubtoken', url: 'https://github.com/rajeshprivate007/react-application.git'
+                sh 'cd react-app-chart && helm dependency update'
             }
         }
         stage('NPM Install') {
@@ -79,10 +80,11 @@ pipeline {
             steps {
                 script {
                     sh """
-                     az login --identity
-                     az aks get-credentials --resource-group "aks-resource-group" --name "my-aks-cluster" --overwrite-existing
-                     kubectl apply -f deployment.yaml
-                     kubectl apply -f service.yaml
+                        az login --identity
+                        az aks get-credentials --resource-group "aks-resource-group" --name "my-aks-cluster" --overwrite-existing
+                        helm upgrade --install react-app ./react-app-chart \
+                        --set buildNumber=${BUILD_NUMBER} \
+                        --namespace default
                     """
                 }
             }
