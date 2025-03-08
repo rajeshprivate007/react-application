@@ -42,6 +42,13 @@ pipeline {
                 echo "Build image"
                 sh "docker build -t rajesh7620/node-app:latest ."
             }
+        }
+        stage('Trivy Vulnerability Scan') {
+            steps {
+                sh """
+                trivy image --exit-code 1 --severity CRITICAL,HIGH rajesh7620/node-app:latest || echo 'Vulnerabilities found!'
+                """
+            }
         }  
         stage('Dockerhub Login') {
             steps {
