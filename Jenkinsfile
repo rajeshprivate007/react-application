@@ -49,6 +49,12 @@ pipeline {
                 trivy image --exit-code 1 --severity CRITICAL,HIGH rajesh7620/node-app:latest || echo 'Vulnerabilities found!'
                 """
             }
+        }
+        stage('Trivy Scan and Save Report') {
+            steps {
+                sh "trivy image --format json --output trivy-report.json rajesh7620/node-app:latest"
+                archiveArtifacts 'trivy-report.json'
+            }
         }  
         stage('Dockerhub Login') {
             steps {
