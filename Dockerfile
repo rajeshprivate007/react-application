@@ -22,12 +22,3 @@ EXPOSE 3000
 
 # Command to serve the built React app
 CMD ["serve", "-s", "build", "-l", "3000"]
-
-
-
-#FROM node:latest
-#WORKDIR /apps
-#COPY . .
-#RUN npm install
-#EXPOSE 3000
-#CMD ["node", "src/index.js"]
