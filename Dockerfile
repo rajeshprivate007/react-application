@@ -1,24 +1,27 @@
-# Use an official Node.js image
-FROM node:latest
-
-# Set the working directory
+# ----- Stage 1: Build -----
+FROM node:18-alpine AS build
 WORKDIR /app
 
-# Copy package.json and install dependencies
+# Copy package files and install dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy the rest of the app files
+# Copy the rest of the app and build
 COPY . .
-
-# Build the React app
 RUN npm run build
 
-# Install `serve` to serve the built files
+# ----- Stage 2: Serve -----
+FROM node:18-alpine AS production
+WORKDIR /app
+
+# Install 'serve' only
 RUN npm install -g serve
+
+# Copy only the built static files from the build stage
+COPY --from=build /app/build ./build
 
 # Expose port 3000
 EXPOSE 3000
 
-# Command to serve the built React app
+# Serve the app
 CMD ["serve", "-s", "build", "-l", "3000"]
