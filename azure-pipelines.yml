@@ -1,6 +1,6 @@
 ---
 trigger:
-  - main
+  - none
 pool:
   name: Default
 steps:
@@ -26,3 +26,8 @@ steps:
       echo "Building Docker image..."
       docker build -t myreactapp:$(Build.BuildId) .
     displayName: 'Build Docker Image'
+
+  - script: |
+      echo "Logging in to Docker Hub..."
+      echo "$(DOCKER_HUB_PASSWORD)" | docker login -u "$(DOCKER_HUB_USERNAME)" --password-stdin
+
