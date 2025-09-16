@@ -1,14 +1,23 @@
+---
 trigger:
-  - main   # or your branch name
-
+  - main
 pool:
-  name: 'Default'   # My agent name
-
+  name: Default
 steps:
-- checkout: self           # this fetches the code from your connected GitHub repo
+  - checkout: self
 
-- script: |
-    echo "Running on $(Agent.Name)"
-    ls -l
-    pwd
-  displayName: 'Verify agent and list files'
+  - script: |
+      echo "Running on $(Agent.Name)"
+      ls -l
+      pwd
+    displayName: Verify agent and list files
+
+  - script: |
+      echo "Installing dependencies..."
+      npm install
+    displayName: Install npm packages
+
+  - script: |
+      echo "Building React app..."
+      npm run build
+    displayName: Build React app
