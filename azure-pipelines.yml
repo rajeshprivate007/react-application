@@ -21,3 +21,8 @@ steps:
       echo "Building React app..."
       npm run build
     displayName: Build React app
+
+  - script: |
+      echo "Building Docker image..."
+      docker build -t myreactapp:$(Build.BuildId) .
+    displayName: 'Build Docker Image'
