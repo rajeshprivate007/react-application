@@ -1,29 +1,14 @@
-# Docker
-# Build a Docker image
-# https://docs.microsoft.com/azure/devops/pipelines/languages/docker
-
 trigger:
-- main
+  - main   # or your branch name
 
-resources:
-- repo: self
+pool:
+  name: 'Default'   # My agent name
 
-variables:
-  tag: '$(Build.BuildId)'
+steps:
+- checkout: self           # this fetches the code from your connected GitHub repo
 
-stages:
-- stage: Build
-  displayName: Build image
-  jobs:
-  - job: Build
-    displayName: Build
-    pool:
-      vmImage: ubuntu-latest
-    steps:
-    - task: Docker@2
-      displayName: Build an image
-      inputs:
-        command: build
-        dockerfile: '$(Build.SourcesDirectory)/Dockerfile'
-        tags: |
-          $(tag)
+- script: |
+    echo "Running on $(Agent.Name)"
+    ls -l
+    pwd
+  displayName: 'Verify agent and list files'
