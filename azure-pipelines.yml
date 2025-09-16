@@ -30,4 +30,13 @@ steps:
   - script: |
       echo "Logging in to Docker Hub..."
       echo "$(DOCKER_HUB_PASSWORD)" | docker login -u "$(DOCKER_HUB_USERNAME)" --password-stdin
+      
+      echo "Tagging image..."
+      docker tag myreactapp:$(Build.BuildId) $(DOCKER_HUB_USERNAME)/myreactapp:$(Build.BuildId)
 
+      echo "Pushing image..."
+      docker push $(DOCKER_HUB_USERNAME)/myreactapp:$(Build.BuildId)
+    displayName: 'Push Docker Image'
+    env:
+      DOCKER_HUB_USERNAME: $(DOCKER_HUB_USERNAME)
+      DOCKER_HUB_PASSWORD: $(DOCKER_HUB_PASSWORD)
