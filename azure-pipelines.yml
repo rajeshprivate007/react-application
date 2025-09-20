@@ -41,8 +41,11 @@ steps:
       DOCKER_HUB_USERNAME: $(DOCKER_HUB_USERNAME)
       DOCKER_HUB_PASSWORD: $(DOCKER_HUB_PASSWORD)
 
+  - script: echo "##vso[task.setvariable variable=IMAGE_TAG]$(Build.BuildId)"
+    displayName: "Set IMAGE_TAG variable"
+
+  - script: echo "IMAGE_TAG is $(IMAGE_TAG)"
+    displayName: "Check IMAGE_TAG value"
+
   - script: echo "$(IMAGE_TAG)" > image_tag.txt
     displayName: "Save IMAGE_TAG to file"
-
-  - publish: image_tag.txt
-    artifact: image-metadata
