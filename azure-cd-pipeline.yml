@@ -2,7 +2,7 @@
 trigger:
   - none
 pool:
-  vmImage: self
+  name: self
 steps:
   - script: >
       echo "Logging in to DockerHub..."
