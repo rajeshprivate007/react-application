@@ -2,7 +2,7 @@
 trigger:
   - none
 pool:
-  name: self
+  name: Default
 steps:
   - script: >
       echo "Logging in to DockerHub..."
