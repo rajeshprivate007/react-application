@@ -1,21 +1,28 @@
-# Node.js
-# Build a general Node.js project with npm.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
-
+---
 trigger:
-- main
+- none
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: self
 
 steps:
-- task: NodeTool@0
-  inputs:
-    versionSpec: '20.x'
-  displayName: 'Install Node.js'
+  - script: |
+    echo "Logging in to DockerHub..."
+    echo "$(DOCKER_HUB_PASSWORD)" | docker login -u "$(DOCKER_HUB_USERNAME)" --password-stdin
 
-- script: |
-    npm install
-    npm run build
-  displayName: 'npm install and build'
+    # Fetch the latest numeric tag from DockerHub
+    IMAGE_TAG=$(curl -s "https://registry.hub.docker.com/v2/repositories/$(DOCKER_HUB_USERNAME)/myreactapp/tags?page_size=100" \
+      | jq -r '.results[].name' \
+      | grep -E '^[0-9]+$' \
+      | sort -n \
+      | tail -1)
+
+    echo "Latest DockerHub tag is: $IMAGE_TAG"
+
+    # Set Azure DevOps variable for later steps
+    echo "##vso[task.setvariable variable=IMAGE_TAG]$IMAGE_TAG"
+
+    displayName: "Get latest DockerHub image tag"
+    env:
+      DOCKER_HUB_USERNAME: $(DOCKER_HUB_USERNAME)
+      DOCKER_HUB_PASSWORD: $(DOCKER_HUB_PASSWORD)
