@@ -40,3 +40,6 @@ steps:
     env:
       DOCKER_HUB_USERNAME: $(DOCKER_HUB_USERNAME)
       DOCKER_HUB_PASSWORD: $(DOCKER_HUB_PASSWORD)
+
+  - script: echo "##vso[task.setvariable variable=IMAGE_TAG]$(Build.BuildId)"
+    displayName: "Set IMAGE_TAG variable"
