@@ -26,3 +26,10 @@ steps:
     env:
       DOCKER_HUB_USERNAME: $(DOCKER_HUB_USERNAME)
       DOCKER_HUB_PASSWORD: $(DOCKER_HUB_PASSWORD)
+
+  - script: |
+      echo "Deploying to Minikube with Helm using IMAGE_TAG=$(IMAGE_TAG)"
+      helm upgrade --install myreactapp ./helm-chart \
+        --set image.tag=$(IMAGE_TAG) \
+        --set image.repository=$(DOCKER_HUB_USERNAME)/myreactapp
+    displayName: "Deploy Helm chart to Minikube"
