@@ -53,33 +53,3 @@ steps:
       echo "$(IMAGE_TAG)" > $(Build.ArtifactStagingDirectory)/image_tag.txt
     displayName: "Save IMAGE_TAG to file"
 
-  - script: |
-    echo "Updating Variable Group with IMAGE_TAG=$(IMAGE_TAG)"
-
-    # Set variables
-    ORG_NAME="YOUR_ORG_NAME"
-    PROJECT_NAME="YOUR_PROJECT_NAME"
-    VARIABLE_GROUP_ID=12   # Replace with your Variable Group ID
-
-    # Get the current variable group details
-    curl -s -u :$(System.AccessToken) \
-      -X GET \
-      -H "Accept: application/json;api-version=7.1-preview.2" \
-      "https://dev.azure.com/$ORG_NAME/$PROJECT_NAME/_apis/distributedtask/variablegroups/$VARIABLE_GROUP_ID" \
-      -o vg.json
-
-    # Update IMAGE_TAG variable (add or modify)
-    jq --arg tag "$IMAGE_TAG" '.variables.IMAGE_TAG.value=$tag' vg.json > vg_updated.json
-
-    # Push updated variable group back
-    curl -s -u :$(System.AccessToken) \
-      -X PUT \
-      -H "Content-Type: application/json" \
-      -d @vg_updated.json \
-      "https://dev.azure.com/$ORG_NAME/$PROJECT_NAME/_apis/distributedtask/variablegroups/$VARIABLE_GROUP_ID?api-version=7.1-preview.2"
-
-    echo "Variable Group updated successfully with IMAGE_TAG=$(IMAGE_TAG)"
-    displayName: "Update Variable Group (Bash)"
-    env:
-      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
-
