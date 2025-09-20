@@ -10,22 +10,22 @@ steps:
       echo "Running on $(Agent.Name)"
       ls -l
       pwd
-    displayName: Verify agent and list files
+    displayName: "Verify agent and list files"
 
   - script: |
       echo "Installing dependencies..."
       npm install
-    displayName: Install npm packages
+    displayName: "Install npm packages"
 
   - script: |
       echo "Building React app..."
       npm run build
-    displayName: Build React app
+    displayName: "Build React app"
 
   - script: |
       echo "Building Docker image..."
       docker build -t myreactapp:$(Build.BuildId) .
-    displayName: 'Build Docker Image'
+    displayName: "Build Docker Image"
 
   - script: |
       echo "Logging in to Docker Hub..."
@@ -36,16 +36,55 @@ steps:
 
       echo "Pushing image..."
       docker push $(DOCKER_HUB_USERNAME)/myreactapp:$(Build.BuildId)
-    displayName: 'Push Docker Image'
+    displayName: "Push Docker Image"
     env:
       DOCKER_HUB_USERNAME: $(DOCKER_HUB_USERNAME)
       DOCKER_HUB_PASSWORD: $(DOCKER_HUB_PASSWORD)
 
-  - script: echo "##vso[task.setvariable variable=IMAGE_TAG]$(Build.BuildId)"
+  - script: |
+      echo "##vso[task.setvariable variable=IMAGE_TAG]$(Build.BuildId)"
     displayName: "Set IMAGE_TAG variable"
 
-  - script: echo "IMAGE_TAG is $(IMAGE_TAG)"
+  - script: |
+      echo "IMAGE_TAG is $(IMAGE_TAG)"
     displayName: "Check IMAGE_TAG value"
 
-  - script: echo "$(IMAGE_TAG)" > image_tag.txt
+  - script: |
+      echo "$(IMAGE_TAG)" > $(Build.ArtifactStagingDirectory)/image_tag.txt
     displayName: "Save IMAGE_TAG to file"
+
+  - publish: $(Build.ArtifactStagingDirectory)/image_tag.txt
+    artifact: image-metadata
+    displayName: "Publish IMAGE_TAG as artifact"
+
+  - task: PowerShell@2
+    displayName: "Update Variable Group with IMAGE_TAG"
+    inputs:
+      targetType: inline
+      script: |
+        $patToken = "$(System.AccessToken)"
+        $headers = @{Authorization = "Bearer $patToken"}
+
+        # Variable Group ID to update
+        $variableGroupId = 12  # Replace with your Variable Group ID
+        $orgName = "YOUR_ORG_NAME"
+        $projectName = "YOUR_PROJECT_NAME"
+
+        # Get existing variable group details
+        $vgUrl = "https://dev.azure.com/$orgName/$projectName/_apis/distributedtask/variablegroups/$variableGroupId?api-version=7.1-preview.2"
+        $vg = Invoke-RestMethod -Uri $vgUrl -Method Get -Headers $headers
+
+        # Update IMAGE_TAG variable (add if missing)
+        if (-not $vg.variables.ContainsKey("IMAGE_TAG")) {
+            $vg.variables.IMAGE_TAG = @{ value = "$(IMAGE_TAG)"; isSecret = $false }
+        } else {
+            $vg.variables.IMAGE_TAG.value = "$(IMAGE_TAG)"
+        }
+
+        # Push updated variable group back
+        $body = $vg | ConvertTo-Json -Depth 10
+        Invoke-RestMethod -Uri $vgUrl -Method Put -Headers $headers -Body $body -ContentType "application/json"
+
+        Write-Host "Variable Group updated successfully with IMAGE_TAG=$(IMAGE_TAG)"
+    env:
+      SYSTEM_ACCESSTOKEN: $(System.AccessToken)
