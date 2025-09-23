@@ -3,6 +3,14 @@ trigger:
   - none
 pool:
   name: Default
+
+resources:
+  pipelines:
+    - pipeline: buildApp   # a local alias you choose
+      source: 'react-application-CI-pipeline'  # name of the first pipeline as it appears in DevOps
+      project: 'rajeshsahuprivate' # optional if in same project
+      branch: main         # optional if you only want main branch
+
 steps:
   - script: >
       echo "Logging in to DockerHub..."
