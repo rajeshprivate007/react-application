@@ -1,4 +1,3 @@
----
 trigger:
   - none   # manual run only
 
@@ -33,12 +32,49 @@ stages:
         npm run build
       displayName: "Build React app"
 
+
 # ---------------------------
-# Stage 2 – Build & Push Docker Image
+# Stage 2 – SonarQube Analysis
+# ---------------------------
+- stage: SonarQube
+  displayName: "SonarQube Analysis"
+  dependsOn: Build
+  jobs:
+  - job: AnalyzeCode
+    displayName: "Run SonarQube Analysis"
+    steps:
+    - checkout: self
+
+    # 1. Prepare Analysis Configuration
+    - task: SonarQubePrepare@5
+      displayName: "Prepare SonarQube Analysis"
+      inputs:
+        SonarQube: 'MySonarQubeServiceConnection'   # Name of your service connection
+        scannerMode: 'CLI'
+        configMode: 'manual'
+        cliProjectKey: 'my-react-app'
+        cliProjectName: 'My React App'
+        cliSources: 'src'                          # or '.' for full repo
+
+    # 2. Run Code Analysis
+    - task: SonarQubeAnalyze@5
+      displayName: "Run SonarQube Code Analysis"
+
+    # 3. Publish Quality Gate Result
+    - task: SonarQubePublish@5
+      displayName: "Publish SonarQube Quality Gate Result"
+      inputs:
+        pollingTimeoutSec: '300'
+
+
+# ---------------------------
+# Stage 3 – Build & Push Docker Image
 # ---------------------------
 - stage: Dockerize
   displayName: "Build and Push Docker Image"
-  dependsOn: Build
+  dependsOn: 
+    - Build
+    - SonarQube
   jobs:
   - job: DockerBuildPush
     displayName: "Docker Build & Push"
@@ -76,5 +112,3 @@ stages:
     - publish: $(Build.ArtifactStagingDirectory)
       artifact: drop
       displayName: "Publish artifact with image tag"
-
-
