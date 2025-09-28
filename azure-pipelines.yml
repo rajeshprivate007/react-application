@@ -49,7 +49,7 @@ stages:
     - task: SonarQubePrepare@5
       displayName: "Prepare SonarQube Analysis"
       inputs:
-        SonarQube: 'MySonarQubeServiceConnection'   # Name of your service connection
+        SonarQube: 'SonarConnection'   # Name of your service connection
         scannerMode: 'CLI'
         configMode: 'manual'
         cliProjectKey: 'my-react-app'
