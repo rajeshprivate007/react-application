@@ -53,7 +53,7 @@ stages:
         scannerMode: 'CLI'
         configMode: 'manual'
         cliProjectKey: 'my-react-app'
-        cliProjectName: 'My React App'
+        cliProjectName: 'TestGitwithSonar'
         cliSources: 'src'                          # or '.' for full repo
 
     # 2. Run Code Analysis
