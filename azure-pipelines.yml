@@ -55,6 +55,8 @@ stages:
         cliProjectKey: 'my-react-app'
         cliProjectName: 'TestGitwithSonar'
         cliSources: 'src'                          # or '.' for full repo
+        extraProperties: |
+        sonar.branch.name=
 
     # 2. Run Code Analysis
     - task: SonarQubeAnalyze@5
