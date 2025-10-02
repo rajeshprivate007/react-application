@@ -64,6 +64,7 @@ stages:
     - script: |
         npm install
         npm run build
+      workingDirectory: $(Build.SourcesDirectory)/client
       displayName: "Build App"
 
     # Run the actual analysis
