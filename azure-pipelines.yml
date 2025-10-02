@@ -38,46 +38,45 @@ stages:
 # ---------------------------
 # Stage 2 – SonarQube Analysis
 # ---------------------------
-- stage: SonarQube
-  displayName: "SonarQube Analysis"
-  condition: false
-  jobs:
-  - job: Sonar
-    displayName: "Run SonarQube Scan"
-    steps:
-    - checkout: self
+# - stage: SonarQube
+#   displayName: "SonarQube Analysis"
+#   jobs:
+#   - job: Sonar
+#     displayName: "Run SonarQube Scan"
+#     steps:
+#     - checkout: self
 
-    # Prepare SonarQube (Community Edition)
-    - task: SonarQubePrepare@5
-      displayName: "Prepare SonarQube Analysis"
-      inputs:
-        SonarQube: 'SonarConnection'  # name of service connection
-        scannerMode: 'CLI'
-        configMode: 'manual'
-        cliProjectKey: 'my-react-app'
-        cliProjectName: 'TestGitwithSonar'
-        cliSources: 'client/src'
-        extraProperties: |
-          sonar.verbose=true
-          sonar.branch.name=
-          sonar.branch.target=
+#     # Prepare SonarQube (Community Edition)
+#     - task: SonarQubePrepare@5
+#       displayName: "Prepare SonarQube Analysis"
+#       inputs:
+#         SonarQube: 'SonarConnection'  # name of service connection
+#         scannerMode: 'CLI'
+#         configMode: 'manual'
+#         cliProjectKey: 'my-react-app'
+#         cliProjectName: 'TestGitwithSonar'
+#         cliSources: 'client/src'
+#         extraProperties: |
+#           sonar.verbose=true
+#           sonar.branch.name=
+#           sonar.branch.target=
 
-    # Run build so that SonarQube can see compiled output if needed
-    - script: |
-        npm install
-        npm run build
-      workingDirectory: $(Build.SourcesDirectory)/client
-      displayName: "Build App"
+#     # Run build so that SonarQube can see compiled output if needed
+#     - script: |
+#         npm install
+#         npm run build
+#       workingDirectory: $(Build.SourcesDirectory)/client
+#       displayName: "Build App"
 
-    # Run the actual analysis
-    - task: SonarQubeAnalyze@5
-      displayName: "Run SonarQube Code Analysis"
+#     # Run the actual analysis
+#     - task: SonarQubeAnalyze@5
+#       displayName: "Run SonarQube Code Analysis"
 
-    # Publish the results to the build summary
-    - task: SonarQubePublish@5
-      displayName: "Publish SonarQube Quality Gate Results"
-      inputs:
-        pollingTimeoutSec: '300'
+#     # Publish the results to the build summary
+#     - task: SonarQubePublish@5
+#       displayName: "Publish SonarQube Quality Gate Results"
+#       inputs:
+#         pollingTimeoutSec: '300'
 
 
 # ---------------------------
