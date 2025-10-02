@@ -38,33 +38,39 @@ stages:
 # ---------------------------
 - stage: SonarQube
   displayName: "SonarQube Analysis"
-  dependsOn: Build
   jobs:
-  - job: AnalyzeCode
-    displayName: "Run SonarQube Analysis"
+  - job: Sonar
+    displayName: "Run SonarQube Scan"
     steps:
     - checkout: self
 
-    # 1. Prepare Analysis Configuration
+    # Prepare SonarQube (Community Edition)
     - task: SonarQubePrepare@5
       displayName: "Prepare SonarQube Analysis"
       inputs:
-        SonarQube: 'SonarConnection'   # Name of your service connection
+        SonarQube: 'SonarConnection'  # name of service connection
         scannerMode: 'CLI'
         configMode: 'manual'
         cliProjectKey: 'my-react-app'
         cliProjectName: 'TestGitwithSonar'
-        cliSources: 'src'                          # or '.' for full repo
+        cliSources: 'src'
         extraProperties: |
-          sonar.branch.name= 
+          sonar.branch.name=
+          sonar.branch.target=
 
-    # 2. Run Code Analysis
+    # Run build so that SonarQube can see compiled output if needed
+    - script: |
+        npm install
+        npm run build
+      displayName: "Build App"
+
+    # Run the actual analysis
     - task: SonarQubeAnalyze@5
       displayName: "Run SonarQube Code Analysis"
 
-    # 3. Publish Quality Gate Result
+    # Publish the results to the build summary
     - task: SonarQubePublish@5
-      displayName: "Publish SonarQube Quality Gate Result"
+      displayName: "Publish SonarQube Quality Gate Results"
       inputs:
         pollingTimeoutSec: '300'
 
