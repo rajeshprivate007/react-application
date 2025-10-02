@@ -31,6 +31,7 @@ stages:
     - script: |
         echo "Building React app..."
         npm run build
+      workingDirectory: $(Build.SourcesDirectory)/client
       displayName: "Build React app"
 
 
