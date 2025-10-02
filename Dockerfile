@@ -6,8 +6,8 @@ WORKDIR /app
 COPY client/package*.json ./
 RUN npm install
 
-# Copy the rest of the app and build
-COPY . .
+# Copy the rest of the frontend and build
+COPY client/ ./
 RUN npm run build
 
 # ----- Stage 2: Serve -----
