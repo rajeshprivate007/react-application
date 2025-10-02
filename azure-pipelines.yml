@@ -55,7 +55,9 @@ stages:
         configMode: 'manual'
         cliProjectKey: 'my-react-app'
         cliProjectName: 'TestGitwithSonar'
-        cliSources: 'src'
+        cliSources: 'client/src'
+        extraProperties: |
+          sonar.verbose=true
         extraProperties: |
           sonar.branch.name=
           sonar.branch.target=
