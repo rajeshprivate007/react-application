@@ -58,7 +58,6 @@ stages:
         cliSources: 'client/src'
         extraProperties: |
           sonar.verbose=true
-        extraProperties: |
           sonar.branch.name=
           sonar.branch.target=
 
