@@ -86,7 +86,6 @@ stages:
   displayName: "Build and Push Docker Image"
   dependsOn: 
     - Build
-    - SonarQube
   jobs:
   - job: DockerBuildPush
     displayName: "Docker Build & Push"
