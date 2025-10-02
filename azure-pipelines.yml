@@ -25,6 +25,7 @@ stages:
     - script: |
         echo "Installing dependencies..."
         npm install
+      workingDirectory: $(Build.SourcesDirectory)/client
       displayName: "Install npm packages"
 
     - script: |
