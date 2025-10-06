@@ -30,7 +30,7 @@ spec:
       serviceAccountName: {{ include "react-helm-chart.serviceAccountName" . }}
       {{- with .Values.podSecurityContext }}
       securityContext:
-        {{- toYaml . | nindent 8 }}
+        {{- toYaml . | nindent 8 }}  
       {{- end }}
       containers:
         - name: myreactapp
