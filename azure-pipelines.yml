@@ -23,6 +23,12 @@ stages:
       displayName: "Verify agent and list files"
 
     - script: |
+        echo "Cleaning old node_modules..."
+        rm -rf $(Build.SourcesDirectory)/client/node_modules
+        rm -f $(Build.SourcesDirectory)/client/package-lock.json
+      displayName: "Clean npm cache"
+
+    - script: |
         echo "Installing dependencies..."
         npm install
       workingDirectory: $(Build.SourcesDirectory)/client
