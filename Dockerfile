@@ -1,3 +1,4 @@
+# ------- FRONTEND --------
 # ----- Stage 1: Build -----
 FROM node:18-alpine AS build
 WORKDIR /app
@@ -25,3 +26,5 @@ EXPOSE 3000
 
 # Serve the app
 CMD ["serve", "-s", "build", "-l", "3000", "-n"]
+
+# ------- BACKEND --------
